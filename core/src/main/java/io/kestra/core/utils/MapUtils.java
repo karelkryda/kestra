@@ -24,7 +24,7 @@ public class MapUtils {
         }
 
         Map<String, Object> result = HashMap.newHashMap(Math.max(a.size(), b.size()));
-        result.putAll(deepCloneMap(a));
+        result.putAll(a);
 
         for (Map.Entry<String, Object> entry : b.entrySet()) {
             String key = entry.getKey();
@@ -50,39 +50,11 @@ public class MapUtils {
         return result;
     }
 
-    private static Map<String, Object> deepCloneMap(Map<String, Object> original) {
-        Map<String, Object> cloned = new HashMap<>(original.size());
-        for (Map.Entry<String, Object> entry : original.entrySet()) {
-            cloned.put(entry.getKey(), deepClone(entry.getValue()));
-        }
-        return cloned;
-    }
-
-    private static Object deepClone(Object value) {
-        if (value instanceof Map<?, ?> map) {
-            return deepCloneMap(castMap(map));
-        } else if (value instanceof Collection<?> col) {
-            return cloneCollection(col);
-        } else {
-            return value;
-        }
-    }
-
     private static Collection<?> mergeCollections(Collection<?> colA, Collection<?> colB) {
         List<Object> merged = new ArrayList<>(colA.size() + colB.size());
         merged.addAll(colA);
         merged.addAll(colB);
         return merged;
-    }
-
-    private static Collection<?> cloneCollection(Collection<?> elements) {
-        try {
-            Collection<Object> newInstance = elements.getClass().getDeclaredConstructor().newInstance();
-            newInstance.addAll(elements);
-            return newInstance;
-        } catch (Exception e) {
-            return new ArrayList<>(elements);
-        }
     }
 
     @SuppressWarnings("unchecked")
